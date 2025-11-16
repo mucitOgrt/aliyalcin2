@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branşlar Yönetimi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Menü stilleri */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 15px 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 20px 20px;
+            display: block;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-bottom: 3px solid white;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Ana içerik */
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        /* Form kartı */
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            height: fit-content;
+        }
+
+        .form-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #333;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+
+        .btn-edit:hover {
+            background: #e0a800;
+        }
+
+        /* Liste kartı */
+        .list-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .list-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .branch-list {
+            list-style: none;
+        }
+
+        .branch-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .branch-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .branch-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .branch-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        /* Alert mesajları */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive tasarım */
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.3);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-link {
+                padding: 15px 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-card, .list-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigasyon Menüsü -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">📚 Ders Programı</div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="index.html"    class="nav-link">Ana Sayfa  </a></li>
+                <li class="nav-item"><a href="brans.html"    class="nav-link">Branşlar   </a></li>
+                <li class="nav-item"><a href="ogretmen.html" class="nav-link">Öğretmenler</a></li>
+                <li class="nav-item"><a href="sinif.html"    class="nav-link">Sınıflar   </a></li>
+                <li class="nav-item"><a href="ders.html"     class="nav-link">Dersler    </a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Ana İçerik -->
+    <div class="main-content">
+        <!-- Sayfa Başlığı -->
+        <div class="page-header">
+            <h1>📚 Branş Yönetimi</h1>
+            <p>Okuldaki tüm branşları buradan ekleyebilir, düzenleyebilir ve silebilirsiniz.</p>
+        </div>
+
+        <!-- İçerik Grid -->
+        <div class="content-grid">
+            <!-- Form Kartı -->
+            <div class="form-card">
+                <h2 id="formTitle">➕ Yeni Branş Ekle</h2>
+                
+                <div class="alert alert-success" id="successAlert">
+                    Branş başarıyla eklendi!
+                </div>
+                
+                <div class="alert alert-error" id="errorAlert">
+                    Lütfen branş adını giriniz!
+                </div>
+
+                <form id="branchForm">
+                    <input type="hidden" id="editId" value="">
+                    
+                    <div class="form-group">
+                        <label for="branchName">Branş Adı *</label>
+                        <input 
+                            type="text" 
+                            id="branchName" 
+                            placeholder="Örn: Matematik, Türkçe, İngilizce..." 
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        Branş Ekle
+                    </button>
+                </form>
+            </div>
+
+            <!-- Liste Kartı -->
+            <div class="list-card">
+                <h2>📋 Branş Listesi</h2>
+                
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="🔍 Branş ara..."
+                    >
+                </div>
+
+                <ul class="branch-list" id="branchList">
+                    <!-- Branşlar buraya eklenecek -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hamburger menü toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Menü linklerine tıklandığında active class değiştir
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+            });
+        });
+
+        // Branş yönetimi
+        // Eski sabit veri tanımını kaldırın.
+// let branches = [...] satırları yerine bu kod gelecek:
+
+let editingId = null; // Düzenlenen kaydın ID'si
+const API_URL = 'api/brans.php'; // PHP API dosyamızın yolu
+
+const branchForm = document.getElementById('branchForm');
+const branchNameInput = document.getElementById('branchName');
+const branchList = document.getElementById('branchList');
+const searchInput = document.getElementById('searchInput');
+const successAlert = document.getElementById('successAlert');
+const errorAlert = document.getElementById('errorAlert');
+const formTitle = document.getElementById('formTitle');
+const submitBtn = document.getElementById('submitBtn');
+const editIdInput = document.getElementById('editId');
+
+// --- YARDIMCI FONKSİYONLAR ---
+
+// Alert göster
+function showAlert(type, message) {
+    const alertElement = type === 'success' ? successAlert : errorAlert;
+    alertElement.textContent = message;
+    alertElement.classList.add('show');
+    
+    setTimeout(() => {
+        alertElement.classList.remove('show');
+    }, 3000);
+}
+
+// Formu sıfırla
+function resetForm() {
+    editingId = null;
+    formTitle.textContent = '➕ Yeni Branş Ekle';
+    submitBtn.textContent = 'Branş Ekle';
+    branchNameInput.value = '';
+}
+
+// --- DİNAMİK LİSTELEME (READ) ---
+
+// Sadece HTML'i oluşturan fonksiyon
+function renderBranches(filteredBranches) {
+    if (filteredBranches.length === 0) {
+        branchList.innerHTML = `
+            <div class="empty-state" style="grid-column: 1/-1;">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 100-2h-3z" clip-rule="evenodd"></path>
+                </svg>
+                <p>Hiçbir branş bulunamadı.</p>
+            </div>
+        `;
+        return;
+    }
+
+    branchList.innerHTML = filteredBranches.map(branch => `
+        <li class="branch-item" data-id="${branch.brans_id}" data-name="${branch.brans_adi}">
+            <span class="branch-name">${branch.brans_adi}</span>
+            <div class="branch-actions">
+                <button class="btn btn-edit" onclick="editBranch(${branch.brans_id}, '${branch.brans_adi}')">
+                    ✏️ Düzenle
+                </button>
+                <button class="btn btn-danger" onclick="deleteBranch(${branch.brans_id})">
+                    🗑️ Sil
+                </button>
+            </div>
+        </li>
+    `).join('');
+}
+
+// API'den verileri çeker ve listeyi günceller
+async function fetchAndRenderBranches(filter = '') {
+    try {
+        const response = await fetch(`${API_URL}?filter=${encodeURIComponent(filter)}`);
+        const data = await response.json();
+        
+        // Data bir hata mesajı içeriyorsa (örneğin DB bağlantı hatası)
+        if (data.error) {
+            showAlert('error', 'Veriler yüklenirken hata oluştu: ' + data.error);
+            branchList.innerHTML = '<div class="empty-state">Veritabanı hatası.</div>';
+            return;
+        }
+
+        renderBranches(data);
+
+    } catch (error) {
+        console.error('API Hatası:', error);
+        showAlert('error', 'API ile iletişim kurulamadı. Sunucu hatası.');
+    }
+}
+
+// --- CRUD İŞLEMLERİ ---
+
+// Form submit (Ekleme / Güncelleme)
+branchForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const bransAdi = branchNameInput.value.trim();
+    if (!bransAdi) {
+        showAlert('error', 'Lütfen branş adını giriniz!');
+        return;
+    }
+    
+    // PHP API'ye gönderilecek veri nesnesi
+    const dataToSend = {
+        islem_turu: editingId ? 'guncelle' : 'ekle',
+        brans_adi: bransAdi,
+        brans_id: editingId // Güncelleme ise ID'yi gönder
+    };
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        });
+        
+        const result = await response.json();
+
+        if (result.success) {
+            showAlert('success', result.message);
+            resetForm(); // Formu temizle
+            fetchAndRenderBranches(searchInput.value); // Listeyi yenile
+        } else {
+            showAlert('error', result.message);
+        }
+
+    } catch (error) {
+        console.error('Sunucu Hatası:', error);
+        showAlert('error', 'Sunucu ile iletişim kurulamadı.');
+    }
+});
+
+// Branş düzenle (Formu doldurur)
+function editBranch(id, name) {
+    editingId = id;
+    branchNameInput.value = name;
+    formTitle.textContent = '✏️ Branş Düzenle';
+    submitBtn.textContent = 'Branşı Güncelle';
+    branchNameInput.focus();
+}
+
+// Branş sil
+function deleteBranch(id) {
+    if (!confirm('Bu branşı silmek istediğinizden emin misiniz? Bu işlem, bu branşa atanmış öğretmen/ders atamalarını etkileyebilir.')) {
+        return;
+    }
+    
+    const dataToSend = {
+        islem_turu: 'sil',
+        brans_id: id
+    };
+
+    fetch(API_URL, {
+        method: 'POST', // API'miz DELETE metodunu POST içinde taşıyor
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            showAlert('success', result.message);
+            fetchAndRenderBranches(searchInput.value); // Listeyi yenile
+        } else {
+            showAlert('error', result.message);
+        }
+    })
+    .catch(error => {
+        console.error('Silme Hatası:', error);
+        showAlert('error', 'Silme işlemi sırasında sunucu hatası oluştu.');
+    });
+}
+
+// Arama kutusu olayı
+searchInput.addEventListener('input', (e) => {
+    fetchAndRenderBranches(e.target.value);
+});
+
+// İlk yükleme
+fetchAndRenderBranches();
+
+// Hamburger ve Navigasyon Menüleri (Mevcut kodunuzu koruyun)
+// ... hamburger ve nav menü kodları buranın üstünde kalmalı, veya bu script'in en altına eklenmelidir.
+// ... (Eğer bu kod bloğu ile değiştirdiyseniz, en başa tekrar ekleyin, ben bu cevapta korumadım.)
+// Not: Kullanıcının orijinal HTML'indeki hamburger menü kodunu bu yeni kodun üstüne veya altına eklemesi gerektiğini not ediyorum.
+// ... (Kullanıcının gönderdiği kodda hamburger menü kodu en alttaydı, bu yüzden bu yeni kodun üstüne eklenmeli)
+// ... (Örneğin: document.getElementById('hamburger').addEventListener('click', ...));
+    </script>
+</body>
+</html>

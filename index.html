@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Oluştur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Menü stilleri */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 15px 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin: 0;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 20px 20px;
+            display: block;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-bottom: 3px solid white;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 3px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Ana içerik */
+        .main-content {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .mode-selection {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .mode-selection h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .mode-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .mode-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .mode-card.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #764ba2;
+        }
+
+        .mode-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .mode-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .mode-card .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        /* Manuel Program */
+        .manual-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .manual-section.active {
+            display: block;
+        }
+
+        .manual-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .class-selector {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .class-selector label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .class-selector select {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .schedule-table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th, td {
+            border: 2px solid #667eea;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .time-cell {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+
+        td.schedule-cell {
+            background-color: #ffffff;
+            min-height: 60px;
+            font-size: 0.85rem;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+        }
+
+        td.schedule-cell:hover {
+            background-color: #f0f0ff;
+        }
+
+        td.schedule-cell.filled {
+            background-color: #e8f5e9;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        /* Otomatik Program */
+        .auto-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .auto-section.active {
+            display: block;
+        }
+
+        .auto-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .auto-options {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .option-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .option-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .progress-section {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #e7f3ff;
+            border-radius: 10px;
+        }
+
+        .progress-section.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive tasarım */
+        @media screen and (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.3);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-link {
+                padding: 15px 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .mode-options {
+                grid-template-columns: 1fr;
+            }
+
+            .class-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigasyon Menüsü -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">📚 Ders Programı</div>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="index.html"    class="nav-link">Ana Sayfa  </a></li>
+                <li class="nav-item"><a href="brans.html"    class="nav-link">Branşlar   </a></li>
+                <li class="nav-item"><a href="ogretmen.html" class="nav-link">Öğretmenler</a></li>
+                <li class="nav-item"><a href="sinif.html"    class="nav-link">Sınıflar   </a></li>
+                <li class="nav-item"><a href="ders.html"     class="nav-link">Dersler    </a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Ana İçerik -->
+    <div class="main-content">
+        <!-- Sayfa Başlığı -->
+        <div class="page-header">
+            <h1>⚙️ Program Oluştur</h1>
+            <p>Manuel veya otomatik yöntemle haftalık ders programınızı oluşturun.</p>
+        </div>
+
+        <!-- Mod Seçimi -->
+        <div class="mode-selection">
+            <h2>Program Oluşturma Yöntemi Seçin</h2>
+            <div class="mode-options">
+                <div class="mode-card" id="manualMode" onclick="selectMode('manual')">
+                    <div class="icon">✏️</div>
+                    <h3>Manuel Program</h3>
+                    <p>Her sınıf için dersleri tek tek yerleştirerek programı kendiniz oluşturun. Daha fazla kontrol sağlar.</p>
+                </div>
+                <div class="mode-card" id="autoMode" onclick="selectMode('auto')">
+                    <div class="icon">🤖</div>
+                    <h3>Otomatik Program</h3>
+                    <p>Sistem, öğretmen müsaitlik durumlarını ve kısıtlamaları dikkate alarak otomatik olarak program oluşturur.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manuel Program Bölümü -->
+        <div class="manual-section" id="manualSection">
+            <h2>📝 Manuel Program Oluştur</h2>
+            
+            <div class="alert alert-success" id="manualSuccessAlert">
+                Program başarıyla kaydedildi!
+            </div>
+
+            <div class="class-selector">
+                <label>Sınıf Seçin:</label>
+                <select id="manualClassSelect">
+                    <option value="">Sınıf Seçiniz</option>
+                    <option value="9A">9A</option>
+                    <option value="9B">9B</option>
+                    <option value="10A">10A</option>
+                    <option value="10B">10B</option>
+                </select>
+            </div>
+
+            <div class="info-box">
+                💡 <strong>Nasıl Kullanılır:</strong> Programı oluşturmak için tablodaki hücrelere tıklayın ve açılan listeden dersi seçin. Hücreler otomatik olarak müsait öğretmenleri gösterecektir.
+            </div>
+
+            <div class="schedule-table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Saat</th>
+                            <th>Pazartesi</th>
+                            <th>Salı</th>
+                            <th>Çarşamba</th>
+                            <th>Perşembe</th>
+                            <th>Cuma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="time-cell">08:30 - 09:10</td>
+                            <td class="schedule-cell" data-day="1" data-period="1"></td>
+                            <td class="schedule-cell" data-day="2" data-period="1"></td>
+                            <td class="schedule-cell" data-day="3" data-period="1"></td>
+                            <td class="schedule-cell" data-day="4" data-period="1"></td>
+                            <td class="schedule-cell" data-day="5" data-period="1"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">09:30 - 10:10</td>
+                            <td class="schedule-cell" data-day="1" data-period="2"></td>
+                            <td class="schedule-cell" data-day="2" data-period="2"></td>
+                            <td class="schedule-cell" data-day="3" data-period="2"></td>
+                            <td class="schedule-cell" data-day="4" data-period="2"></td>
+                            <td class="schedule-cell" data-day="5" data-period="2"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">10:20 - 11:00</td>
+                            <td class="schedule-cell" data-day="1" data-period="3"></td>
+                            <td class="schedule-cell" data-day="2" data-period="3"></td>
+                            <td class="schedule-cell" data-day="3" data-period="3"></td>
+                            <td class="schedule-cell" data-day="4" data-period="3"></td>
+                            <td class="schedule-cell" data-day="5" data-period="3"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">11:10 - 11:50</td>
+                            <td class="schedule-cell" data-day="1" data-period="4"></td>
+                            <td class="schedule-cell" data-day="2" data-period="4"></td>
+                            <td class="schedule-cell" data-day="3" data-period="4"></td>
+                            <td class="schedule-cell" data-day="4" data-period="4"></td>
+                            <td class="schedule-cell" data-day="5" data-period="4"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">12:30 - 13:10</td>
+                            <td class="schedule-cell" data-day="1" data-period="5"></td>
+                            <td class="schedule-cell" data-day="2" data-period="5"></td>
+                            <td class="schedule-cell" data-day="3" data-period="5"></td>
+                            <td class="schedule-cell" data-day="4" data-period="5"></td>
+                            <td class="schedule-cell" data-day="5" data-period="5"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">13:20 - 14:00</td>
+                            <td class="schedule-cell" data-day="1" data-period="6"></td>
+                            <td class="schedule-cell" data-day="2" data-period="6"></td>
+                            <td class="schedule-cell" data-day="3" data-period="6"></td>
+                            <td class="schedule-cell" data-day="4" data-period="6"></td>
+                            <td class="schedule-cell" data-day="5" data-period="6"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">14:10 - 14:50</td>
+                            <td class="schedule-cell" data-day="1" data-period="7"></td>
+                            <td class="schedule-cell" data-day="2" data-period="7"></td>
+                            <td class="schedule-cell" data-day="3" data-period="7"></td>
+                            <td class="schedule-cell" data-day="4" data-period="7"></td>
+                            <td class="schedule-cell" data-day="5" data-period="7"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">15:00 - 15:40</td>
+                            <td class="schedule-cell" data-day="1" data-period="8"></td>
+                            <td class="schedule-cell" data-day="2" data-period="8"></td>
+                            <td class="schedule-cell" data-day="3" data-period="8"></td>
+                            <td class="schedule-cell" data-day="4" data-period="8"></td>
+                            <td class="schedule-cell" data-day="5" data-period="8"></td>
+                        </tr>
+                        <tr>
+                            <td class="time-cell">15:50 - 16:30</td>
+                            <td class="schedule-cell" data-day="1" data-period="9"></td>
+                            <td class="schedule-cell" data-day="2" data-period="9"></td>
+                            <td class="schedule-cell" data-day="3" data-period="9"></td>
+                            <td class="schedule-cell" data-day="4" data-period="9"></td>
+                            <td class="schedule-cell" data-day="5" data-period="9"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="saveManualSchedule()">
+                    💾 Programı Kaydet
+                </button>
+                <button class="btn btn-warning" onclick="clearManualSchedule()">
+                    🗑️ Temizle
+                </button>
+            </div>
+        </div>
+
+        <!-- Otomatik Program Bölümü -->
+        <div class="auto-section" id="autoSection">
+            <h2>🤖 Otomatik Program Oluştur</h2>
+            
+            <div class="alert alert-info" id="autoInfoAlert">
+                Program oluşturuluyor, lütfen bekleyin...
+            </div>
+
+            <div class="info-box">
+                ⚠️ <strong>Önemli:</strong> Otomatik program oluşturma, tanımlanmış tüm dersleri, öğretmen müsaitlik durumlarını ve çalışma günlerini dikkate alarak çalışır. İşlem birkaç saniye sürebilir.
+            </div>
+
+            <div class="auto-options">
+                <div class="option-card">
+                    <h3>⚙️ Program Ayarları</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="avoidConsecutive" checked>
+                            <label for="avoidConsecutive">Aynı dersin art arda gelmesini engelle</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="balanceDaily" checked>
+                            <label for="balanceDaily">Dersleri günlere dengeli dağıt</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="respectTeacherDays" checked>
+                            <label for="respectTeacherDays">Öğretmen çalışma günlerini dikkate al</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="avoidFirstLast">
+                            <label for="avoidFirstLast">Ağır dersleri ilk ve son saate koyma</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-card">
+                    <h3>🎯 Sınıf Seçimi</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="selectAll" checked onchange="toggleAllClasses()">
+                            <label for="selectAll"><strong>Tüm Sınıflar</strong></label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="class-checkbox" value="9A" checked>
+                            <label>9A</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="class-checkbox" value="9B" checked>
+                            <label>9B</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="class-checkbox" value="10A" checked>
+                            <label>10A</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="class-checkbox" value="10B" checked>
+                            <label>10B</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="generateAutoSchedule()">
+                    🚀 Otomatik Program Oluştur
+                </button>
+            </div>
+
+            <div class="progress-section" id="progressSection">
+                <h3>📊 İşlem Durumu</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+                </div>
+                <p id="progressText">Hazırlanıyor...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hamburger menü toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Menü linklerine tıklandığında active class değiştir
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                navLinks.forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+            });
+        });
+
+        let currentMode = null;
+
+        // Mod seçimi
+        function selectMode(mode) {
+            currentMode = mode;
+            
+            // Kartları güncelle
+            document.getElementById('manualMode').classList.remove('active');
+            document.getElementById('autoMode').classList.remove('active');
+            
+            if (mode === 'manual') {
+                document.getElementById('manualMode').classList.add('active');
+                document.getElementById('manualSection').classList.add('active');
+                document.getElementById('autoSection').classList.remove('active');
+            } else {
+                document.getElementById('autoMode').classList.add('active');
+                document.getElementById('autoSection').classList.add('active');
+                document.getElementById('manualSection').classList.remove('active');
+            }
+        }
+
+        // Tüm sınıfları seç/kaldır
+        function toggleAllClasses() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.class-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll.checked;
+            });
+        }
+
+        // Manuel program - Sınıf değiştiğinde
+        document.getElementById('manualClassSelect')?.addEventListener('change', function() {
+            if (this.value) {
+                alert(`${this.value} sınıfı için program düzenleniyor.\nHücrelere tıklayarak ders ekleyebilirsiniz.`);
+            }
+        });
+
+        // Manuel programı kaydet
+        function saveManualSchedule() {
+            const selectedClass = document.getElementById('manualClassSelect').value;
+            if (!selectedClass) {
+                alert('Lütfen önce bir sınıf seçin!');
+                return;
+            }
+
+            const alert = document.getElementById('manualSuccessAlert');
+            alert.classList.add('show');
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 3000);
+        }
+
+        // Manuel programı temizle
+        function clearManualSchedule() {
+            if (confirm('Tüm programı temizlemek istediğinizden emin misiniz?')) {
+                const cells = document.querySelectorAll('.schedule-cell');
+                cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.classList.remove('filled');
+                });
+            }
+        }
+
+        // Otomatik program oluştur
+        function generateAutoSchedule() {
+            
